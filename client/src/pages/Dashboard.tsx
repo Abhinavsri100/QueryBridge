@@ -47,6 +47,22 @@ const Dashboard = () => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    if (!window.confirm('Are you sure you want to delete this connection?')) return;
+    
+    dispatch(setLoading(true));
+    try {
+      await axios.delete(`http://127.0.0.1:5001/api/db/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchConnections();
+    } catch (err: any) {
+      dispatch(setError('Failed to delete connection'));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   return (
     <div className="dashboard container fade-in">
       <header className="dashboard-header">
@@ -123,7 +139,13 @@ const Dashboard = () => {
               </div>
               <div className="conn-actions">
                 <button className="btn btn-icon"><LinkIcon size={18} /></button>
-                <button className="btn btn-icon danger"><Trash2 size={18} /></button>
+                <button 
+                  className="btn btn-icon danger" 
+                  onClick={() => handleDelete(conn.id)}
+                  title="Delete Connection"
+                >
+                  <Trash2 size={18} />
+                </button>
               </div>
             </div>
           ))

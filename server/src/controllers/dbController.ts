@@ -17,12 +17,14 @@ export const addConnection = async (req: Request, res: Response) => {
     await userDb.raw('SELECT 1'); // Simple ping
     await userDb.destroy();
 
-    const [id] = await db('db_connections').insert({
+    const [idObj] = await db('db_connections').insert({
       user_id: userId,
       name,
       type,
       connectionString,
-    });
+    }).returning('id');
+
+    const id = typeof idObj === 'object' ? idObj.id : idObj;
 
     res.status(201).json({ message: 'Connection added successfully', id });
   } catch (error: any) {
@@ -88,5 +90,25 @@ export const executeQuery = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Execute query error:', error);
     res.status(500).json({ message: 'Error executing query: ' + error.message });
+  }
+};
+
+export const deleteConnection = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user.id;
+
+    const deletedCount = await db('db_connections')
+      .where({ id, user_id: userId })
+      .del();
+
+    if (deletedCount === 0) {
+      return res.status(404).json({ message: 'Connection not found' });
+    }
+
+    res.json({ message: 'Connection deleted successfully' });
+  } catch (error) {
+    console.error('Delete connection error:', error);
+    res.status(500).json({ message: 'Error deleting connection' });
   }
 };

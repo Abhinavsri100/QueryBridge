@@ -19,11 +19,13 @@ export const signup = async (req: Request, res: Response) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const [id] = await db('users').insert({
+    const [userObj] = await db('users').insert({
       email,
       password: hashedPassword,
       name,
-    });
+    }).returning('id');
+
+    const id = typeof userObj === 'object' ? userObj.id : userObj;
 
     const token = jwt.sign({ id, email }, JWT_SECRET, { expiresIn: '24h' });
 
