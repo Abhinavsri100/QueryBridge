@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const [showAdd, setShowAdd] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({ name: '', type: 'sqlite', connectionString: '' });
   const { connections, loading } = useSelector((state: RootState) => state.db);
   const { token } = useSelector((state: RootState) => state.auth);
@@ -53,18 +55,24 @@ const Dashboard = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Are you sure you want to delete this connection?')) return;
+    setDeletingId(id);
+    setShowDeleteModal(true);
+  };
+
+  const executeDelete = async () => {
+    if (!deletingId) return;
     
     dispatch(setLoading(true));
     try {
-      await axios.delete(`http://127.0.0.1:5001/api/db/${id}`, {
+      await axios.delete(`http://127.0.0.1:5001/api/db/${deletingId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Connection deleted');
+      setShowDeleteModal(false);
+      setDeletingId(null);
       fetchConnections();
     } catch (err: any) {
       toast.error('Failed to delete connection');
-      dispatch(setError('Failed to delete connection'));
     } finally {
       dispatch(setLoading(false));
     }
@@ -156,6 +164,35 @@ const Dashboard = () => {
           ))
         )}
       </div>
+
+      {showDeleteModal && (
+        <div className="modal-overlay fade-in">
+          <div className="modal-content scale-in">
+            <div className="modal-icon">
+              <Trash2 size={32} />
+            </div>
+            <h3>Delete Connection?</h3>
+            <p>This action cannot be undone. You will lose access to this database within QueryBridge.</p>
+            <div className="modal-actions">
+              <button 
+                onClick={() => { setShowDeleteModal(false); setDeletingId(null); }} 
+                className="btn btn-secondary"
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={executeDelete} 
+                className="btn btn-primary danger-bg"
+                style={{ backgroundColor: 'var(--danger)' }}
+                disabled={loading}
+              >
+                {loading ? <Loader2 className="animate-spin" /> : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
