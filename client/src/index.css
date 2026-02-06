@@ -498,6 +498,9 @@ input:focus {
   background: var(--bg-card);
   padding: 16px;
   border-radius: 12px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .message-bubble.user .msg-content {
@@ -521,6 +524,7 @@ input:focus {
   overflow-x: auto;
   border-radius: 8px;
   border: 1px solid var(--border);
+  max-width: 100%; /* Important: prevents table from expanding bubble */
 }
 
 .results-table {
