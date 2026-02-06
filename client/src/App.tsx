@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Toaster } from 'react-hot-toast';
 import type { RootState } from './store/store.js';
 import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
@@ -13,6 +14,7 @@ const App = () => {
 
   return (
     <div className="app">
+      <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />

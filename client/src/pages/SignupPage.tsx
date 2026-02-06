@@ -5,6 +5,7 @@ import type { RootState } from '../store/store';
 import { loginStart, loginSuccess, loginFailure } from '../slices/authSlice';
 import axios from 'axios';
 import { User, Mail, Lock, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const SignupPage = () => {
   const [name, setName] = useState('');
@@ -12,7 +13,7 @@ const SignupPage = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state: RootState) => state.auth);
+  const { loading } = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,11 +21,13 @@ const SignupPage = () => {
     dispatch(loginStart());
     try {
       const res = await axios.post('http://127.0.0.1:5001/api/auth/signup', { name, email, password });
-      console.log('Signup response:', res.data);
       dispatch(loginSuccess(res.data));
+      toast.success('Welcome to QueryBridge!');
       navigate('/dashboard');
     } catch (err: any) {
-      dispatch(loginFailure(err.response?.data?.message || 'Signup failed'));
+      const msg = err.response?.data?.message || 'Signup failed';
+      dispatch(loginFailure(msg));
+      toast.error(msg);
     }
   };
 
@@ -33,8 +36,6 @@ const SignupPage = () => {
       <div className="auth-card glass-card fade-in">
         <h2>Get Started</h2>
         <p>Create your account and connect your first DB</p>
-        
-        {error && <div className="error-msg">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">

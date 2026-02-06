@@ -4,6 +4,7 @@ import type { RootState } from '../store/store';
 import { setConnections, setActiveConnection } from '../slices/dbSlice';
 import axios from 'axios';
 import { Send, Bot, User, Database, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const ChatInterface = () => {
   const [input, setInput] = useState('');
@@ -53,7 +54,9 @@ const ChatInterface = () => {
       };
       setMessages(prev => [...prev, botMsg]);
     } catch (err: any) {
-      setMessages(prev => [...prev, { role: 'bot', content: 'Sorry, I ran into an error: ' + (err.response?.data?.message || err.message) }]);
+      const msg = err.response?.data?.message || err.message;
+      setMessages(prev => [...prev, { role: 'bot', content: 'Sorry, I ran into an error: ' + msg }]);
+      toast.error('Query failed: ' + msg);
     } finally {
       setLoading(false);
     }

@@ -4,11 +4,12 @@ import type { RootState } from '../store/store';
 import { setConnections, setLoading, setError } from '../slices/dbSlice';
 import axios from 'axios';
 import { Plus, Database, Server, Trash2, Loader2, Link as LinkIcon } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [formData, setFormData] = useState({ name: '', type: 'sqlite', connectionString: '' });
-  const { connections, loading, error } = useSelector((state: RootState) => state.db);
+  const { connections, loading } = useSelector((state: RootState) => state.db);
   const { token } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
@@ -21,6 +22,7 @@ const Dashboard = () => {
       dispatch(setConnections(res.data));
     } catch (err: any) {
       dispatch(setError('Failed to fetch connections'));
+      toast.error('Failed to fetch connections');
     } finally {
       dispatch(setLoading(false));
     }
@@ -39,9 +41,12 @@ const Dashboard = () => {
       });
       setShowAdd(false);
       setFormData({ name: '', type: 'sqlite', connectionString: '' });
+      toast.success('Connection added successfully!');
       fetchConnections();
     } catch (err: any) {
-      dispatch(setError(err.response?.data?.message || 'Failed to add connection'));
+      const msg = err.response?.data?.message || 'Failed to add connection';
+      dispatch(setError(msg));
+      toast.error(msg);
     } finally {
       dispatch(setLoading(false));
     }
@@ -55,8 +60,10 @@ const Dashboard = () => {
       await axios.delete(`http://127.0.0.1:5001/api/db/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      toast.success('Connection deleted');
       fetchConnections();
     } catch (err: any) {
+      toast.error('Failed to delete connection');
       dispatch(setError('Failed to delete connection'));
     } finally {
       dispatch(setLoading(false));
@@ -74,8 +81,6 @@ const Dashboard = () => {
           <Plus size={20} /> Connect New DB
         </button>
       </header>
-
-      {error && <div className="error-msg">{error}</div>}
 
       {showAdd && (
         <div className="glass-card add-connection-card fade-in">
