@@ -18,7 +18,7 @@ const Dashboard = () => {
   const fetchConnections = async () => {
     dispatch(setLoading(true));
     try {
-      const res = await axios.get('http://127.0.0.1:5001/api/db', {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/db`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       dispatch(setConnections(res.data));
@@ -38,7 +38,7 @@ const Dashboard = () => {
     e.preventDefault();
     dispatch(setLoading(true));
     try {
-      await axios.post('http://127.0.0.1:5001/api/db', formData, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/db`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setShowAdd(false);
@@ -64,7 +64,7 @@ const Dashboard = () => {
     
     dispatch(setLoading(true));
     try {
-      await axios.delete(`http://127.0.0.1:5001/api/db/${deletingId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/db/${deletingId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Connection deleted');

@@ -20,7 +20,7 @@ const SignupPage = () => {
     console.log('Attempting signup for:', email);
     dispatch(loginStart());
     try {
-      const res = await axios.post('http://127.0.0.1:5001/api/auth/signup', { name, email, password });
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`, { name, email, password });
       dispatch(loginSuccess(res.data));
       toast.success('Welcome to QueryBridge!');
       navigate('/dashboard');

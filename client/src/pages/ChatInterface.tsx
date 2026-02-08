@@ -17,7 +17,7 @@ const ChatInterface = () => {
 
   useEffect(() => {
     if (connections.length === 0) {
-      axios.get('http://127.0.0.1:5001/api/db', {
+      axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/db`, {
         headers: { Authorization: `Bearer ${token}` }
       }).then(res => {
         dispatch(setConnections(res.data));
@@ -40,7 +40,7 @@ const ChatInterface = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://127.0.0.1:5001/api/db/query', {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/db/query`, {
         connectionId: activeConnection.id,
         query: input
       }, {

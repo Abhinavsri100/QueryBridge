@@ -19,7 +19,7 @@ const LoginPage = () => {
     console.log('Attempting login for:', email);
     dispatch(loginStart());
     try {
-      const res = await axios.post('http://127.0.0.1:5001/api/auth/login', { email, password });
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, { email, password });
       dispatch(loginSuccess(res.data));
       toast.success('Logged in successfully!');
       navigate('/dashboard');

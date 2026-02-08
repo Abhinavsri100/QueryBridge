@@ -5,7 +5,7 @@ import { logout } from '../slices/authSlice';
 import { Database, LogOut, MessageSquare, LayoutDashboard } from 'lucide-react';
 
 const Navbar = () => {
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
