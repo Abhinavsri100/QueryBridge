@@ -19,7 +19,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // 2. CORS
 app.use(cors({
-  origin: true, // Reflect request origin
+  origin: "http://query-bridge.vercel.app/",
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
