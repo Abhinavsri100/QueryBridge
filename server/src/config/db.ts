@@ -12,7 +12,7 @@ const db = knex({
   useNullAsDefault: !isPostgres,
 });
 
-// Create users table if it doesn't exist
+
 const initDb = async () => {
   try {
     const hasTable = await db.schema.hasTable('users');
@@ -31,7 +31,7 @@ const initDb = async () => {
     if (!hasConnectionsTable) {
       await db.schema.createTable('db_connections', (table) => {
         table.increments('id').primary();
-        table.integer('user_id').notNullable(); // Postgres requires explicit types oftens, simplified for migration
+        table.integer('user_id').notNullable();
         table.string('name').notNullable();
         table.string('type').notNullable(); 
         table.text('connectionString').notNullable();

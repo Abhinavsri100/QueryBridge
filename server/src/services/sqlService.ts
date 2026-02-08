@@ -30,8 +30,6 @@ export const connectToUserDb = (config: {
 };
 
 export const getTableSchema = async (db: Knex): Promise<string> => {
-  // This is a simplified version. Ideally, we list all tables and their columns.
-  // For now, let's try to get a summary of the schema.
   
   let tables: any[] = [];
   const clientType = (db.client as any).config.client;

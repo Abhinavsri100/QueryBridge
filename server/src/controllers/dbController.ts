@@ -12,9 +12,9 @@ export const addConnection = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Try connecting to verify
+
     const userDb = connectToUserDb({ type, connectionString });
-    await userDb.raw('SELECT 1'); // Simple ping
+    await userDb.raw('SELECT 1'); 
     await userDb.destroy();
 
     const [idObj] = await db('db_connections').insert({
@@ -65,10 +65,9 @@ export const executeQuery = async (req: Request, res: Response) => {
       connectionString: connection.connectionString,
     });
 
-    // 1. Get schema
+
     const schema = await getTableSchema(userDb);
 
-    // 2. Convert NL to SQL
     const sql = await convertToSql(query, schema, connection.type);
     console.log('Generated SQL:', sql);
 

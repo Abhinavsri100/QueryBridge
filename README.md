@@ -23,7 +23,7 @@ TalkWithDatabase is a premium platform that allows non-technical users to connec
 - **Node.js** + **Express** + **TypeScript**
 - **Knex.js** (Query Builder)
 - **PostgreSQL** (Internal Database via Neon)
-- **Google Generative AI SDK** (Gemini 1.5 Flash)
+- **Claude 3.5 Sonnet** (via OpenAI-Compatible SDK)
 - **JWT** + **BcryptJS** (Authentication)
 
 ## 🚀 Getting Started
