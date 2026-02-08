@@ -1,4 +1,4 @@
-import knex from 'knex';
+import knex, { type Knex } from 'knex';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,7 +17,7 @@ const initDb = async () => {
   try {
     const hasTable = await db.schema.hasTable('users');
     if (!hasTable) {
-      await db.schema.createTable('users', (table) => {
+      await db.schema.createTable('users', (table: Knex.TableBuilder) => {
         table.increments('id').primary();
         table.string('email').unique().notNullable();
         table.string('password').notNullable();
@@ -29,7 +29,7 @@ const initDb = async () => {
 
     const hasConnectionsTable = await db.schema.hasTable('db_connections');
     if (!hasConnectionsTable) {
-      await db.schema.createTable('db_connections', (table) => {
+      await db.schema.createTable('db_connections', (table: Knex.TableBuilder) => {
         table.increments('id').primary();
         table.integer('user_id').notNullable();
         table.string('name').notNullable();
